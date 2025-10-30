@@ -173,7 +173,7 @@ Finalmente, los resultados se presentan en una tabla y una gráfica que muestran
     plt.show()
 
 else:
-    print("⚠️ No se pudo calcular frecuencias porque no hay contracciones detectadas.")
+    print("No se pudo calcular frecuencias porque no hay contracciones detectadas.")
 
 ```
 
