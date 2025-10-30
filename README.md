@@ -184,4 +184,17 @@ Si no se detectan contracciones, el programa muestra un aviso para evitar errore
 
 ### DIAGRAMAS
 
-
+<img width="400" height="800" alt="image" src="img1.jpg" /> <br>
+En la grafica se observa la señal EMG normalizada en amplitud,los valores del eje Y van de -1 a 1, ya que la señal fue escalada (dividida por su valor máximo) para que todos los datos queden dentro de ese rango,La amplitud indica la intensidad de la actividad eléctrica generada por las fibras musculares.
+<img width="400" height="800" alt="image" src="img2.jpg" /> <br>
+En la grafica se observa la energía local de la señal EMG,esta gráfica representa la energía promedio de la señal EMG a lo largo del tiempo, calculada usando una ventana deslizante de 100 ms.
+La energía local refleja cuánta actividad eléctrica muscular hay en cada instante del registro,el cálculo de la energía local transforma una señal oscilatoria y ruidosa en una envolvente positiva y estable, donde los máximos de energía representan contracciones y los mínimos representan descanso o inactividad.
+<img width="400" height="800" alt="image" src="img3.jpg" /> <br>
+En la grafica se observa la detección y segmentación automática de las contracciones musculares a partir de la energía local calculada anteriormente,el objetivo es mostrar en qué momentos del tiempo el algoritmo detectó actividad muscular significativa, subrayada por una franja azul claro.
+<img width="400" height="800" alt="image" src="img4.jpg" /> <br>
+La tabla presenta los valores espectrales obtenidos tras aplicar la Transformada Rápida de Fourier (FFT) a cada contracción individual,las frecuencias medias se mantienen alrededor de 40 Hz, lo cual es consistente con una señal EMG emulada estable,La frecuencia mediana también permanece casi constante (≈6 Hz), indicando que el contenido de energía en frecuencia no varía significativamente entre contracciones lo cual indica que esta simulación esta sin presencia de fatiga muscular real.
+<img width="400" height="800" alt="image" src="img5.jpg" /> <br>
+La gráfica compara los valores de frecuencia media y frecuencia mediana obtenidos para cada contracción de la señal EMG.Cada punto representa una contracción, y las líneas muestran la tendencia de ambos parámetros espectrales a medida que avanza el tiempo o el esfuerzo muscular,Esta gráfica demuestra que la señal EMG emulada presenta comportamiento estable entre contracciones, reflejando un músculo sin fatiga,tal como se espera en una señal generada artificialmente.
+<img width="400" height="800" alt="image" src="img6.jpg" /> <br>
+Esta gráfica presenta el espectro de frecuencias de una sola contracción muscular obtenida de la señal EMG.
+La FFT transforma la señal del dominio del tiempo (amplitud vs. tiempo) al dominio de la frecuencia (potencia vs. frecuencia), permitiendo analizar qué frecuencias predominan en la actividad muscular,el espectro tiene un pico pronunciado en bajas frecuencias, lo que indica que la mayor parte de la energía del músculo se concentra en componentes lentas,la energía disminuye rápidamente a medida que aumenta la frecuencia, lo que es típico en señales EMG, ya que las contracciones musculares contienen más información en bajas frecuencias.
