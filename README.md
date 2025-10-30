@@ -16,3 +16,5 @@ En esta primera parte del laboratorio se genero una señal EMG por medio del gen
 Esta señal tuvo un analisis por energia,ya que la señal original es altamente ruidosa y oscilatoria, entonces el código calcula la energía local, que es la potencia promedio de la señal en una ventana de tiempo,asi los valores negativos desaparecen, ya que se elevan al cuadrado,las zonas con mayor actividad muscular (mayor amplitud EMG) se reflejan como picos de energía y se pueden detectar fácilmente las contracciones.
 
 <img width="400" height="800" alt="image" src="cardiaca.png" /> <br>
+
+### SEÑAL EMULADA 
