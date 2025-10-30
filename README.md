@@ -181,3 +181,7 @@ La ultima parte del codigo selecciona la primera contracción detectada en la se
 La variable P representa la potencia espectral (energía contenida en cada frecuencia), que permite identificar qué rangos de frecuencia dominan la actividad muscular.Luego, el código calcula nuevamente la frecuencia media y la frecuencia mediana, y las muestra como líneas verticales sobre la gráfica:
 La frecuencia media y La frecuencia mediana
 Si no se detectan contracciones, el programa muestra un aviso para evitar errores en el cálculo.
+
+### DIAGRAMAS
+
+
