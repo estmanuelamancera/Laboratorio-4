@@ -214,7 +214,7 @@ La FFT transforma la señal del dominio del tiempo (amplitud vs. tiempo) al domi
 # PARTE B- Procesamiento y análisis de señal EMG real
 ## Procedimiento
 En esta segunda parte del laboratorio se trabajo el procesamiento de una señal electromiográfica (EMG) real, registrada sobre un grupo muscular durante la ejecución de contracciones voluntarias en este caso lo trabajamos especificamente en el antebrazo. Buscando analizar la actividad eléctrica de este y observando el comportamiento del espectro de frecuencias durante el esfuerzo y la posible aparición de fatiga muscular.<br>
-<img width="1429" height="1429" alt="image" src="https://github.com/user-attachments/assets/a011ac17-75be-4cf7-b7b8-3fe72f4c350e" /><br>
+<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/a011ac17-75be-4cf7-b7b8-3fe72f4c350e" /><br>
 
 Para ello, se aplicó un filtro pasa banda de 20–450 Hz que permitió eliminar artefactos de movimiento y ruido eléctrico, conservando solo las frecuencias fisiológicamente relevantes de la señal EMG. Posteriormente, la señal se segmentó en contracciones individuales, se calculó para cada una la frecuencia media y mediana mediante la Transformada de Fourier, y se graficaron los resultados para evaluar la tendencia del espectro.<br>
 
