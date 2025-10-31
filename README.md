@@ -221,4 +221,267 @@ Este análisis permite relacionar los cambios en el contenido frecuencial con lo
 ## Diagrama
 <img width="319" height="241" alt="image" src="https://github.com/user-attachments/assets/2eb8bcd2-3333-41fa-aa60-70d78ddb5ff1" /><br>
 
+## Codigo 
+```
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.signal import butter, filtfilt, find_peaks
+from scipy.fft import fft, fftfreq
+from google.colab import files
 
+# === a–b. CARGAR SEÑAL EMG REAL ===
+print("archivo de señal EMG (CSV)")
+uploaded = files.upload()
+
+# === CONFIGURACIÓN ===
+archivo = list(uploaded.keys())[0]
+fs = 2000  # Frecuencia de muestreo (Hz) 
+
+# === c. FILTRADO PASA BANDA 20–450 Hz ===
+def bandpass_filter(sig, fs, lowcut=20, highcut=450):
+    nyq = 0.5 * fs
+    b, a = butter(4, [lowcut/nyq, highcut/nyq], btype='band')
+    return filtfilt(b, a, sig)
+
+# Lectura
+data = pd.read_csv(archivo, header=None, sep=None, engine='python')
+data = data.apply(pd.to_numeric, errors='coerce').dropna()
+signal = data.iloc[:,0].values.astype(float)
+filtered = bandpass_filter(signal, fs)
+```
+Este bloque del código carga y prepara la señal EMG para su análisis. Permite subir el archivo CSV, define la frecuencia de muestreo (2000 Hz) y aplica un filtro pasa banda Butterworth (20–450 Hz) que elimina el ruido y conserva la información útil del músculo, dejando la señal lista para analizar las contracciones y sus frecuencias.<br>
+
+```
+# === Visualización señal original y filtrada ===
+t = np.arange(len(signal)) / fs
+plt.figure(figsize=(12,5))
+plt.subplot(2,1,1)
+plt.plot(t, signal)
+plt.title("Señal EMG original")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Amplitud")
+
+plt.subplot(2,1,2)
+plt.plot(t, filtered, color='orange')
+plt.title("Señal EMG filtrada (20–450 Hz)")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Amplitud")
+plt.tight_layout()
+plt.show()
+
+# === d. DETECCIÓN AUTOMÁTICA DE CONTRACCIONES ===
+# Basada en energía RMS normalizada
+window = int(0.2 * fs)
+rms = np.sqrt(np.convolve(filtered**2, np.ones(window)/window, mode='same'))
+rms_norm = (rms - np.min(rms)) / (np.max(rms) - np.min(rms))
+peaks, _ = find_peaks(rms_norm, height=np.mean(rms_norm)*1.1, distance=int(fs*0.3))
+
+# Construir intervalos en segundos
+intervalos = []
+dur = 0.6  # Duración aproximada (s)
+for p in peaks:
+    start = max((p/fs) - dur/2, 0)
+    end = min((p/fs) + dur/2, len(filtered)/fs)
+    intervalos.append([start, end])
+
+# Si no detecta, toma toda la señal como una contracción
+if len(intervalos) == 0:
+    intervalos = [[0, len(filtered)/fs]]
+
+print(f"✅ Contracciones detectadas: {len(intervalos)}")
+
+# Visualizar energía y detección
+plt.figure(figsize=(12,4))
+plt.plot(t, rms_norm, label='RMS normalizada')
+plt.plot(np.array(peaks)/fs, rms_norm[peaks], 'ro', label='Contracciones detectadas')
+plt.title("Detección automática de contracciones (energía RMS)")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Energía normalizada")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+```
+Este bloque del código visualiza la señal EMG original y filtrada, permitiendo comparar el registro sin procesar con la versión limpia. Luego calcula la energía RMS (Root Mean Square) para estimar los periodos de mayor actividad muscular y, a partir de esa energía normalizada, realiza la detección automática de contracciones utilizando el método de picos. Cada contracción identificada se guarda con su intervalo de inicio y fin en segundos. Finalmente, se muestra una gráfica de energía RMS donde los picos rojos representan las contracciones detectadas en la señal.<br>
+
+```
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.signal import butter, filtfilt, find_peaks
+from scipy.fft import fft, fftfreq
+from google.colab import files
+
+# === a–b. CARGAR SEÑAL EMG REAL ===
+print("archivo de señal EMG (CSV)")
+uploaded = files.upload()
+
+# === CONFIGURACIÓN ===
+archivo = list(uploaded.keys())[0]
+fs = 2000  # Frecuencia de muestreo (Hz) 
+
+# === c. FILTRADO PASA BANDA 20–450 Hz ===
+def bandpass_filter(sig, fs, lowcut=20, highcut=450):
+    nyq = 0.5 * fs
+    b, a = butter(4, [lowcut/nyq, highcut/nyq], btype='band')
+    return filtfilt(b, a, sig)
+
+# Lectura
+data = pd.read_csv(archivo, header=None, sep=None, engine='python')
+data = data.apply(pd.to_numeric, errors='coerce').dropna()
+signal = data.iloc[:,0].values.astype(float)
+filtered = bandpass_filter(signal, fs)
+
+# === Visualización señal original y filtrada ===
+t = np.arange(len(signal)) / fs
+plt.figure(figsize=(12,5))
+plt.subplot(2,1,1)
+plt.plot(t, signal)
+plt.title("Señal EMG original")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Amplitud")
+
+plt.subplot(2,1,2)
+plt.plot(t, filtered, color='orange')
+plt.title("Señal EMG filtrada (20–450 Hz)")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Amplitud")
+plt.tight_layout()
+plt.show()
+
+# === d. DETECCIÓN AUTOMÁTICA DE CONTRACCIONES ===
+# Basada en energía RMS normalizada
+window = int(0.2 * fs)
+rms = np.sqrt(np.convolve(filtered**2, np.ones(window)/window, mode='same'))
+rms_norm = (rms - np.min(rms)) / (np.max(rms) - np.min(rms))
+peaks, _ = find_peaks(rms_norm, height=np.mean(rms_norm)*1.1, distance=int(fs*0.3))
+
+# Construir intervalos en segundos
+intervalos = []
+dur = 0.6  # Duración aproximada (s)
+for p in peaks:
+    start = max((p/fs) - dur/2, 0)
+    end = min((p/fs) + dur/2, len(filtered)/fs)
+    intervalos.append([start, end])
+
+# Si no detecta, toma toda la señal como una contracción
+if len(intervalos) == 0:
+    intervalos = [[0, len(filtered)/fs]]
+
+print(f"✅ Contracciones detectadas: {len(intervalos)}")
+
+# Visualizar energía y detección
+plt.figure(figsize=(12,4))
+plt.plot(t, rms_norm, label='RMS normalizada')
+plt.plot(np.array(peaks)/fs, rms_norm[peaks], 'ro', label='Contracciones detectadas')
+plt.title("Detección automática de contracciones (energía RMS)")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Energía normalizada")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# === e. CÁLCULO DE FRECUENCIAS ===
+def mean_median_freq(segment, fs):
+    N = len(segment)
+    fft_vals = np.abs(fft(segment))
+    freqs = fftfreq(N, 1/fs)
+    mask = freqs > 0
+    freqs = freqs[mask]
+    psd = fft_vals[mask]**2
+    mean_f = np.sum(freqs * psd) / np.sum(psd)
+    cum = np.cumsum(psd)
+    median_f = freqs[np.where(cum >= cum[-1]/2)[0][0]]
+    return mean_f, median_f, freqs, psd
+
+segments = []
+for inicio, fin in intervalos:
+    start = int(inicio * fs)
+    end = int(fin * fs)
+    segments.append(filtered[start:end])
+
+mean_freqs, median_freqs = [], []
+
+plt.figure(figsize=(10,5))
+for i, seg in enumerate(segments, start=1):
+    mean_f, median_f, freqs, psd = mean_median_freq(seg, fs)
+    mean_freqs.append(mean_f)
+    median_freqs.append(median_f)
+    plt.plot(freqs, psd, label=f'Contracción {i}')
+    plt.axvline(mean_f, color='r', linestyle='--')
+    plt.axvline(median_f, color='g', linestyle=':')
+plt.title("Transformada de Fourier - Señal EMG")
+plt.xlabel("Frecuencia (Hz)")
+plt.ylabel("Potencia (PSD)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# === f. TABLA Y GRÁFICA DE RESULTADOS ===
+results = pd.DataFrame({
+    "Contracción": np.arange(1, len(mean_freqs)+1),
+    "Frecuencia Media (Hz)": np.round(mean_freqs, 2),
+    "Frecuencia Mediana (Hz)": np.round(median_freqs, 2)
+})
+print("\n--- RESULTADOS ---")
+print(results.to_string(index=False))
+
+# Gráfica evolución si hay más de una
+if len(segments) > 1:
+    plt.figure(figsize=(8,4))
+    plt.plot(results["Contracción"], results["Frecuencia Media (Hz)"], 'o-', label="Frecuencia media")
+    plt.plot(results["Contracción"], results["Frecuencia Mediana (Hz)"], 'o-', label="Frecuencia mediana")
+    plt.xlabel("Número de contracción")
+    plt.ylabel("Frecuencia (Hz)")
+    plt.title("Evolución de frecuencia media y mediana")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# === g. ANÁLISIS AUTOMÁTICO DE FATIGA ===
+if len(mean_freqs) > 1:
+    tendencia = "disminuyen" if mean_freqs[-1] < mean_freqs[0] else "aumentan"
+    print(f"\n Las frecuencias {tendencia} a medida que avanzan las contracciones,")
+    print("lo cual es coherente con la aparición progresiva de fatiga muscular.")
+else:
+    print("\n Solo se detectó una contracción; no se puede evaluar la tendencia,")
+    print("pero sí se calcularon sus frecuencias características (media y mediana).")
+
+```
+
+Este bloque de código realiza todo el procesamiento, análisis y visualización de la señal EMG real, cumpliendo con los pasos de la parte B del laboratorio. Primero, carga la señal desde un archivo CSV y aplica un filtro pasa banda Butterworth (20–450 Hz) para eliminar el ruido, mostrando la señal original y filtrada. Luego, calcula la energía RMS para identificar automáticamente los periodos de contracción muscular, marcándolos en una gráfica. Posteriormente, divide la señal en contracciones, y para cada una obtiene la Transformada de Fourier, a partir de la cual calcula la frecuencia media y mediana, que representan la distribución espectral del esfuerzo muscular. Finalmente, el código muestra una tabla con los valores obtenidos, grafica la evolución de las frecuencias (si hay varias contracciones) y analiza si existe una disminución de las frecuencias que indique la presencia de fatiga muscular.<br>
+
+```
+# === f. TABLA Y GRÁFICA DE RESULTADOS ===
+results = pd.DataFrame({
+    "Contracción": np.arange(1, len(mean_freqs)+1),
+    "Frecuencia Media (Hz)": np.round(mean_freqs, 2),
+    "Frecuencia Mediana (Hz)": np.round(median_freqs, 2)
+})
+print("\n--- RESULTADOS ---")
+print(results.to_string(index=False))
+
+# Gráfica evolución si hay más de una
+if len(segments) > 1:
+    plt.figure(figsize=(8,4))
+    plt.plot(results["Contracción"], results["Frecuencia Media (Hz)"], 'o-', label="Frecuencia media")
+    plt.plot(results["Contracción"], results["Frecuencia Mediana (Hz)"], 'o-', label="Frecuencia mediana")
+    plt.xlabel("Número de contracción")
+    plt.ylabel("Frecuencia (Hz)")
+    plt.title("Evolución de frecuencia media y mediana")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# === g. ANÁLISIS AUTOMÁTICO DE FATIGA ===
+if len(mean_freqs) > 1:
+    tendencia = "disminuyen" if mean_freqs[-1] < mean_freqs[0] else "aumentan"
+    print(f"\n Las frecuencias {tendencia} a medida que avanzan las contracciones,")
+    print("lo cual es coherente con la aparición progresiva de fatiga muscular.")
+else:
+    print("\n Solo se detectó una contracción; no se puede evaluar la tendencia,")
+    print("pero sí se calcularon sus frecuencias características (media y mediana).")
+```
+Este bloque final del código presenta y analiza los resultados obtenidos del procesamiento de la señal EMG. Primero crea una tabla con la frecuencia media y mediana calculadas para cada contracción, mostrando los valores redondeados en pantalla. Si la señal contiene varias contracciones, genera una gráfica de evolución donde se observa cómo cambian las frecuencias a lo largo del tiempo. Finalmente, el código interpreta los resultados automáticamente: si las frecuencias disminuyen entre las contracciones, se concluye que existe una tendencia asociada a la fatiga muscular, mientras que si solo se detecta una contracción, se limita a mostrar sus frecuencias características.<br>
