@@ -221,7 +221,7 @@ Para ello, se aplicó un filtro pasa banda de 20–450 Hz que permitió eliminar
 Este análisis permite relacionar los cambios en el contenido frecuencial con los procesos fisiológicos de la fatiga, ya que una disminución progresiva de las frecuencias indica una menor velocidad de conducción de las fibras musculares y una reducción de la frecuencia de activación de las unidades motoras.<br>
 
 ## Diagrama
-<img width="400" height="800" alt="image" src="https://github.com/user-attachments/assets/2eb8bcd2-3333-41fa-aa60-70d78ddb5ff1" /><br>
+<img width="800" height="1100" alt="image" src="https://github.com/user-attachments/assets/2eb8bcd2-3333-41fa-aa60-70d78ddb5ff1" /><br>
 
 ## Codigo 
 ```
