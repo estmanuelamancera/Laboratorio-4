@@ -495,7 +495,13 @@ La amplitud también es muy baja, lo que puede pasar por una contracción débil
 
 <img width="538" height="210" alt="image" src="https://github.com/user-attachments/assets/f31c6028-4f87-4dfa-be99-08ad25832a32" /><br>
 
-La energía RMS (línea azul) representa la intensidad de la señal EMG a lo largo del tiempo. En la gráfica se ve que solo aparece un pico alto al inicio, marcado con un punto rojo.Lo que indica una única contracción detectada, mientras que el resto de la señal se mantiene muy cerca de cero, señalando que no hubo más actividad muscular después de esa primera contracción.
+La energía RMS (línea azul) representa la intensidad de la señal EMG a lo largo del tiempo. En la gráfica se ve que solo aparece un pico alto al inicio, marcado con un punto rojo.Lo que indica una única contracción detectada, mientras que el resto de la señal se mantiene muy cerca de cero, señalando que no hubo más actividad muscular después de esa primera contracción.<br>
+
+<img width="491" height="232" alt="image" src="https://github.com/user-attachments/assets/3066fe51-f99d-4962-bbf3-7a63fc853cb7" /><br>
+<img width="297" height="59" alt="image" src="https://github.com/user-attachments/assets/b6eb0545-92e3-46e9-b75c-c76f44949fe1" /><br>
+
+A partir de la Transformada de Fourier se obtuvo el espectro de potencia de la contracción registrada; en la gráfica se observa que la mayor energía se concentra en torno a las bajas frecuencias. Para la contracción analizada la frecuencia media fue aproximadamente 35.6 Hz y la frecuencia mediana 20 Hz, lo que indica que la mayor parte de la energía del EMG está por debajo de ~40 Hz en este evento. Fisiológicamente, esto es consistente con una contracción breve y de baja intensidad; en condiciones de fatiga sostenida esperaríamos ver un desplazamiento del espectro hacia frecuencias más bajas (disminución de la frecuencia media y mediana) por la menor velocidad de conducción y menor tasa de disparo de las unidades motoras. En resumen: la FFT confirma que el registro contiene energía principalmente en bajas frecuencias y las métricas calculadas (frec. media y mediana) son coherentes con la amplitud y forma observadas en la señal filtrada.<br>
+
 
 
 
