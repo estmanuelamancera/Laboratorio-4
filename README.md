@@ -212,6 +212,7 @@ Esta gráfica presenta el espectro de frecuencias de una sola contracción muscu
 La FFT transforma la señal del dominio del tiempo (amplitud vs. tiempo) al dominio de la frecuencia (potencia vs. frecuencia), permitiendo analizar qué frecuencias predominan en la actividad muscular,el espectro tiene un pico pronunciado en bajas frecuencias, lo que indica que la mayor parte de la energía del músculo se concentra en componentes lentas,la energía disminuye rápidamente a medida que aumenta la frecuencia, lo que es típico en señales EMG, ya que las contracciones musculares contienen más información en bajas frecuencias.
 
 # PARTE B- Procesamiento y análisis de señal EMG real
+Codigo= https://colab.research.google.com/drive/1KPXxuYNoCQRyBh8D7oJwheDpsMR-HgaG#scrollTo=IOVJGvtOuy2u 
 ## Procedimiento
 En esta segunda parte del laboratorio se trabajo el procesamiento de una señal electromiográfica (EMG) real, registrada sobre un grupo muscular durante la ejecución de contracciones voluntarias en este caso lo trabajamos especificamente en el antebrazo. Buscando analizar la actividad eléctrica de este y observando el comportamiento del espectro de frecuencias durante el esfuerzo y la posible aparición de fatiga muscular.<br>
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/a011ac17-75be-4cf7-b7b8-3fe72f4c350e" /><br>
