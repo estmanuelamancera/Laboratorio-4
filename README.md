@@ -210,10 +210,15 @@ La gráfica compara los valores de frecuencia media y frecuencia mediana obtenid
 Esta gráfica presenta el espectro de frecuencias de una sola contracción muscular obtenida de la señal EMG.
 La FFT transforma la señal del dominio del tiempo (amplitud vs. tiempo) al dominio de la frecuencia (potencia vs. frecuencia), permitiendo analizar qué frecuencias predominan en la actividad muscular,el espectro tiene un pico pronunciado en bajas frecuencias, lo que indica que la mayor parte de la energía del músculo se concentra en componentes lentas,la energía disminuye rápidamente a medida que aumenta la frecuencia, lo que es típico en señales EMG, ya que las contracciones musculares contienen más información en bajas frecuencias.
 
-## PARTE B- Procesamiento y análisis de señal EMG real
+# PARTE B- Procesamiento y análisis de señal EMG real
+## Procedimiento
 En esta segunda parte del laboratorio se trabajo el procesamiento de una señal electromiográfica (EMG) real, registrada sobre un grupo muscular durante la ejecución de contracciones voluntarias en este caso lo trabajamos especificamente en el antebrazo. Buscando analizar la actividad eléctrica de este y observando el comportamiento del espectro de frecuencias durante el esfuerzo y la posible aparición de fatiga muscular.<br>
 
 Para ello, se aplicó un filtro pasa banda de 20–450 Hz que permitió eliminar artefactos de movimiento y ruido eléctrico, conservando solo las frecuencias fisiológicamente relevantes de la señal EMG. Posteriormente, la señal se segmentó en contracciones individuales, se calculó para cada una la frecuencia media y mediana mediante la Transformada de Fourier, y se graficaron los resultados para evaluar la tendencia del espectro.<br>
 
 Este análisis permite relacionar los cambios en el contenido frecuencial con los procesos fisiológicos de la fatiga, ya que una disminución progresiva de las frecuencias indica una menor velocidad de conducción de las fibras musculares y una reducción de la frecuencia de activación de las unidades motoras.<br>
+
+## Diagrama
+<img width="319" height="241" alt="image" src="https://github.com/user-attachments/assets/2eb8bcd2-3333-41fa-aa60-70d78ddb5ff1" /><br>
+
 
