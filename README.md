@@ -13,7 +13,8 @@ análisis de señales biomédicas
 # PROCEDIMIENTO
 ## PARTE A Captura de la señal emulada 
 En esta primera parte del laboratorio se genero una señal EMG por medio del generador de señales el cual simuló cinco contracciones musculares voluntarias, representando la actividad eléctrica del músculo durante el esfuerzo,con una frecuencia de muestreo 5000 Hz y una duracion de 10 s. Los datos que se obtuvieron se almacenaron en un archivo de texto (Señal EMG5000.txt), para luego segmentarla por contraccion y calcular la frecuencia media y mediana de cada una, asi se puede observar cómo varía el contenido espectral a lo largo del tiempo.
-Esta señal tuvo un analisis por energia,ya que la señal original es altamente ruidosa y oscilatoria, entonces el código calcula la energía local, que es la potencia promedio de la señal en una ventana de tiempo,asi los valores negativos desaparecen, ya que se elevan al cuadrado,las zonas con mayor actividad muscular (mayor amplitud EMG) se reflejan como picos de energía y se pueden detectar fácilmente las contracciones.
+Esta señal tuvo un analisis por energia,ya que la señal original es altamente ruidosa y oscilatoria, entonces el código calcula la energía local, que es la potencia promedio de la señal en una ventana de tiempo,asi los valores negativos desaparecen, ya que se elevan al cuadrado,las zonas con mayor actividad muscular (mayor amplitud EMG) se reflejan como picos de energía y se pueden detectar fácilmente las contracciones.<br>
+
 
 <img width="400" height="800" alt="image" src="cardiaca.png" /> <br>
 
@@ -485,3 +486,17 @@ else:
     print("pero sí se calcularon sus frecuencias características (media y mediana).")
 ```
 Este bloque final del código presenta y analiza los resultados obtenidos del procesamiento de la señal EMG. Primero crea una tabla con la frecuencia media y mediana calculadas para cada contracción, mostrando los valores redondeados en pantalla. Si la señal contiene varias contracciones, genera una gráfica de evolución donde se observa cómo cambian las frecuencias a lo largo del tiempo. Finalmente, el código interpreta los resultados automáticamente: si las frecuencias disminuyen entre las contracciones, se concluye que existe una tendencia asociada a la fatiga muscular, mientras que si solo se detecta una contracción, se limita a mostrar sus frecuencias características.<br>
+
+
+<img width="650" height="256" alt="image" src="https://github.com/user-attachments/assets/f36da2c7-5111-4cc2-9d08-a5b5a3682f2f" /><br>
+En la primera gráfica observamos que la señal original tiene una forma casi lineal que aumenta, lo que indica que hay ruido o movimiento del electrodo, no actividad muscular real. mientras que ya aplicado el filtro pasa banda entre 20 y 450 Hz, la señal cambia totalmente: es decir, ahora notamos un pico pequeño al inicio, que corresponde a una contracción breve, y el resto del tiempo la señal queda casi plana, lo que significa que la señal no se capto de la manera deseada.<br>
+
+La amplitud también es muy baja, lo que puede pasar por una contracción débil o un mal contacto de los electrodos. Aun así, el filtrado  fue efectivo bien ya que eliminó el ruido y dejó solo la parte útil de la señal que representa la actividad del músculo.<br>
+
+<img width="538" height="210" alt="image" src="https://github.com/user-attachments/assets/f31c6028-4f87-4dfa-be99-08ad25832a32" /><br>
+
+La energía RMS (línea azul) representa la intensidad de la señal EMG a lo largo del tiempo. En la gráfica se ve que solo aparece un pico alto al inicio, marcado con un punto rojo.Lo que indica una única contracción detectada, mientras que el resto de la señal se mantiene muy cerca de cero, señalando que no hubo más actividad muscular después de esa primera contracción.
+
+
+
+
