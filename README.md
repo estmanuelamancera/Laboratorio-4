@@ -544,6 +544,8 @@ graficar_fft(seg83, Fs, "FFT Contracción 83 (Final)", color='fuchsia')
 plt.tight_layout()
 plt.show()
 ```
+<img width="2111" height="899" alt="image" src="https://github.com/user-attachments/assets/e7ef7f60-9c45-4df7-a751-461321afaea3" /><br>
+
 ## Espectro de amplitud 
 En esta parte del código se realizó el cálculo del espectro de amplitud de las contracciones seleccionadas (la 4 y la 83) utilizando la Transformada Rápida de Fourier (FFT) y representándolo en una escala logarítmica de frecuencia. Este análisis permite observar cómo se distribuye la energía de la señal EMG en diferentes frecuencias y comparar la actividad muscular al inicio y al final del registro. Al graficar ambas contracciones —una en color azul y la otra en fucsia— se puede visualizar si existe un desplazamiento del contenido espectral hacia frecuencias más bajas, lo cual es un indicador típico de fatiga muscular.
 ### Código
@@ -581,6 +583,8 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+<img width="2104" height="852" alt="image" src="https://github.com/user-attachments/assets/cda1d12b-2c00-4eef-97dc-f92e2be05a53" /><br>
+
 ## Espectro de amplitud (Welch) 
 En esta parte del código se aplicó el método de Welch para obtener el espectro de amplitud promedio de las contracciones seleccionadas. Este método mejora la estimación del contenido en frecuencia al dividir la señal en segmentos, calcular la FFT de cada uno y promediar los resultados, reduciendo así el ruido y las variaciones instantáneas. Al representar los espectros en escala logarítmica, se facilita la comparación entre la contracción 4 (inicio) y la contracción 83 (final). Si el pico de energía se desplaza hacia frecuencias más bajas en la contracción final, esto sugiere una disminución en la frecuencia media y, por tanto, la presencia de fatiga muscular.
 ### Código
@@ -602,10 +606,27 @@ plt.legend()
 plt.grid(True, which='both', ls='--', alpha=0.6)
 plt.tight_layout()
 plt.show()
-
 ```
+<img width="2132" height="866" alt="image" src="https://github.com/user-attachments/assets/a2ffa716-399f-4f3b-9b5b-e00b0e52435f" /><br>
 
+## Calculos del pico espectral y gráfica
+En esta parte del código se calcularon dos indicadores clave del análisis espectral: el pico espectral y el centroide de frecuencia. El pico espectral representa la frecuencia donde la energía del músculo es máxima, mientras que el centroide indica la frecuencia promedio ponderada por la potencia del espectro. Estos valores permiten cuantificar los cambios en el contenido frecuencial entre contracciones. Posteriormente, se realizó una gráfica comparativa (en este caso de puntos o barras) para visualizar la diferencia entre las contracciones 4 y 83. Una disminución en ambas frecuencias refleja un desplazamiento del espectro hacia componentes de menor frecuencia, lo cual es un indicador característico de la fatiga muscular.
+### Código
+```
+# CÁLCULO DEL PICO ESPECTRAL Y CENTROIDE
 
+def calcular_pico_centroide(f, Pxx):
+    idx_max = np.argmax(Pxx)
+    f_pico = f[idx_max]
+    centroide = np.sum(f * Pxx) / np.sum(Pxx)
+    return f_pico, centroide
 
+f_pico1, centroide1 = calcular_pico_centroide(f3, Pxx1)
+f_pico2, centroide2 = calcular_pico_centroide(f4, Pxx2)
 
+print("\n--- RESULTADOS ---")
+print(f"Contracción 4 → Pico espectral: {f_pico1:.2f} Hz | Centroide: {centroide1:.2f} Hz")
+print(f"Contracción 83 → Pico espectral: {f_pico2:.2f} Hz | Centroide: {centroide2:.2f} Hz")
+```
+<img width="1852" height="1002" alt="image" src="https://github.com/user-attachments/assets/c81b5382-afe9-41e1-9647-605827edba4c" /><br>
 
