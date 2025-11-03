@@ -505,6 +505,49 @@ En esta parte del laboratorio se implementó la Transformada Rápida de Fourier 
 ## Diagrama
 <img width="1024" height="768" alt="Diagrama de Flujo Árbol de decisiones Sencillo Verde (4)" src="https://github.com/user-attachments/assets/0046a1ff-1253-4b2c-90b0-27faa4f538af" /><br>
 ## PROCEDIMIENTO <br>
+En esta parte del código se aplica un filtro digital pasa banda Butterworth de cuarto orden entre 20 y 450 Hz para limpiar la señal EMG y conservar únicamente las frecuencias relacionadas con la actividad muscular.Las frecuencias inferiores a 20 Hz suelen corresponder a movimientos del cuerpo o desplazamientos de la línea base, mientras que las superiores a 450 Hz se asocian a ruido eléctrico. La implementación con butter() y filtfilt() permite realizar un filtrado sin desfase, evitando retrasos en la señal y preservando su forma original. El resultado es una señal más estable y precisa, que refleja de manera fiel la actividad eléctrica del músculo, siendo fundamental para las etapas posteriores de detección y análisis espectral.
+```
+# Filtrado pasa banda (20–450 Hz)
+def butter_bandpass(lowcut, highcut, fs, order=4):
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
+    return b, a
+
+b, a = butter_bandpass(20, 450, Fs)
+senal_filtrada = filtfilt(b, a, v)
+```
+## Aplicar transformada rápida de Fourier (FFT) 
+
+Se utilizó la Transformada Rápida de Fourier (FFT) para analizar la señal EMG en el dominio de la frecuencia y observar cómo se distribuye su energía en diferentes bandas. Este método permite identificar las frecuencias dominantes que aparecen durante la contracción muscular y evaluar cambios entre el inicio y el final del experimento. En el código, se convierte la magnitud de la FFT a decibelios (dB) y se representa en escala logarítmica para resaltar mejor las variaciones espectrales. Esto es importante porque un desplazamiento del contenido frecuencial hacia frecuencias más bajas puede indicar fatiga muscular, ya que el músculo genera señales eléctricas más lentas cuando se cansa.
+
+```
+def graficar_fft(segmento, fs, titulo, color):
+    N = len(segmento)
+    f = np.fft.rfftfreq(N, 1/fs)
+    fft_mag = np.abs(np.fft.rfft(segmento))
+    fft_mag_db = 20 * np.log10(fft_mag + 1e-12)
+    plt.semilogx(f, fft_mag_db, color=color, linewidth=1.5)
+    plt.title(titulo)
+    plt.xlabel("Frecuencia [Hz] (log)")
+    plt.ylabel("Magnitud [dB]")
+    plt.grid(True, which='both', ls='--', alpha=0.6)
+    plt.xlim(10, 500)
+
+plt.figure(figsize=(12,5))
+plt.subplot(1,2,1)
+graficar_fft(seg4, Fs, "FFT Contracción 4 (Inicio)", color='blue')
+plt.subplot(1,2,2)
+graficar_fft(seg83, Fs, "FFT Contracción 83 (Final)", color='fuchsia')
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+
 
 
 
