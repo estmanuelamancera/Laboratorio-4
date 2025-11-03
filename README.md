@@ -581,8 +581,29 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+## Espectro de amplitud (Welch) 
+En esta parte del código se aplicó el método de Welch para obtener el espectro de amplitud promedio de las contracciones seleccionadas. Este método mejora la estimación del contenido en frecuencia al dividir la señal en segmentos, calcular la FFT de cada uno y promediar los resultados, reduciendo así el ruido y las variaciones instantáneas. Al representar los espectros en escala logarítmica, se facilita la comparación entre la contracción 4 (inicio) y la contracción 83 (final). Si el pico de energía se desplaza hacia frecuencias más bajas en la contracción final, esto sugiere una disminución en la frecuencia media y, por tanto, la presencia de fatiga muscular.
+### Código
+```
+# ESPECTRO DE AMPLITUD (WELCH - logarítmico)
 
+nperseg = 256
+f3, Pxx1 = welch(seg4, fs=Fs, nperseg=nperseg)
+f4, Pxx2 = welch(seg83, fs=Fs, nperseg=nperseg)
 
+plt.figure(figsize=(12,5))
+plt.semilogx(f3, 10*np.log10(Pxx1 + 1e-12), color='blue', label='Contracción 4 (Inicio)', linewidth=1.8)
+plt.semilogx(f4, 10*np.log10(Pxx2 + 1e-12), color='fuchsia', label='Contracción 83 (Final)', linewidth=1.8)
+plt.xlim(10, 500)
+plt.xlabel("Frecuencia [Hz] (log)")
+plt.ylabel("Densidad espectral [dB]")
+plt.title("Espectro de Amplitud (Welch - Escala Logarítmica)")
+plt.legend()
+plt.grid(True, which='both', ls='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+```
 
 
 
