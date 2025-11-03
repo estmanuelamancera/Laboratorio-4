@@ -629,4 +629,8 @@ print(f"Contracción 4 → Pico espectral: {f_pico1:.2f} Hz | Centroide: {centro
 print(f"Contracción 83 → Pico espectral: {f_pico2:.2f} Hz | Centroide: {centroide2:.2f} Hz")
 ```
 <img width="1852" height="1002" alt="image" src="https://github.com/user-attachments/assets/c81b5382-afe9-41e1-9647-605827edba4c" /><br>
+## Conclusiones sobre el uso del análisis espectral en electromiografía
 
+El análisis espectral es una herramienta fundamental en electromiografía, ya que permite estudiar la distribución de frecuencias de la señal muscular y detectar cambios asociados al estado fisiológico del músculo. A través de métodos como la Transformada Rápida de Fourier (FFT) y el método de Welch, es posible observar cómo la energía de la señal EMG se concentra en diferentes rangos de frecuencia dependiendo del nivel de contracción y la presencia de fatiga.
+Cuando el músculo se fatiga, las fibras conducen los impulsos eléctricos más lentamente, lo que genera un desplazamiento del espectro hacia frecuencias más bajas y una disminución del pico y del centroide espectral.
+Por lo tanto, el análisis espectral no solo ofrece una representación cuantitativa del comportamiento muscular, sino que también se convierte en una herramienta diagnóstica útil para evaluar el rendimiento, la fatiga y posibles disfunciones neuromusculares, aportando información objetiva para la valoración clínica y el seguimiento en fisioterapia, rehabilitación y ergonomía.
