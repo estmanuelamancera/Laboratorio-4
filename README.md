@@ -1,4 +1,4 @@
-# Señales Electromiograficas EMG
+# Señal Electromiográfica EMG
 ## DESCRIPCIÓN 
 En este repositorio analizaremos la practica desarollada que se titula **"Señales Electromiograficas"**, se realizo la captura y análisis de señales emuladas y reales, aplicando filtrado, segmentación, análisis espectral (FFT).Ademas se calcularon las frecuencias media y mediana de las contracciones musculares para observar cómo varían durante el esfuerzo para detectar la aparición de la fatiga.
 ## OBJETIVOS
@@ -503,6 +503,8 @@ La energía RMS (línea azul) representa la intensidad de la señal EMG a lo lar
 <img width="297" height="59" alt="image" src="https://github.com/user-attachments/assets/b6eb0545-92e3-46e9-b75c-c76f44949fe1" /><br>
 
 A partir de la Transformada de Fourier se obtuvo el espectro de potencia de la contracción registrada; en la gráfica se observa que la mayor energía se concentra en torno a las bajas frecuencias. Para la contracción analizada la frecuencia media fue aproximadamente 35.6 Hz y la frecuencia mediana 20 Hz, lo que indica que la mayor parte de la energía del EMG está por debajo de ~40 Hz en este evento. Fisiológicamente, esto es consistente con una contracción breve y de baja intensidad; en condiciones de fatiga sostenida esperaríamos ver un desplazamiento del espectro hacia frecuencias más bajas (disminución de la frecuencia media y mediana) por la menor velocidad de conducción y menor tasa de disparo de las unidades motoras. En resumen: la FFT confirma que el registro contiene energía principalmente en bajas frecuencias y las métricas calculadas (frec. media y mediana) son coherentes con la amplitud y forma observadas en la señal filtrada.<br>
+
+# PARTE C  Análisis espectral mediante FFT
 
 
 
