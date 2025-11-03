@@ -503,7 +503,7 @@ A partir de la Transformada de Fourier se obtuvo el espectro de potencia de la c
 # PARTE C  Análisis espectral mediante FFT
 En esta parte del laboratorio se implementó la Transformada Rápida de Fourier (FFT) sobre las contracciones obtenidas de la señal EMG real, con el propósito de analizar su comportamiento en el dominio de la frecuencia. Este procedimiento permitió observar cómo varía el contenido espectral a lo largo del esfuerzo muscular y detectar posibles indicios de fatiga a partir de la reducción en las componentes de alta frecuencia. Además, se compararon los espectros de las primeras y últimas contracciones, identificando el desplazamiento del pico espectral asociado con el esfuerzo sostenido. Finalmente, los resultados obtenidos se emplearon para evaluar la utilidad del análisis espectral como herramienta diagnóstica en estudios de electromiografía y desempeño fisiológico muscular.
 ## Diagrama
-<img width="1024" height="768" alt="Diagrama de Flujo Árbol de decisiones Sencillo Verde (3)" src="https://github.com/user-attachments/assets/dd0d7568-4b88-4ef4-91ec-cc0b41488dc1" /><br>
+<img width="1024" height="768" alt="Diagrama de Flujo Árbol de decisiones Sencillo Verde (4)" src="https://github.com/user-attachments/assets/0046a1ff-1253-4b2c-90b0-27faa4f538af" /><br>
 ## PROCEDIMIENTO <br>
 
 
