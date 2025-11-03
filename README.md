@@ -506,6 +506,7 @@ En esta parte del laboratorio se implementó la Transformada Rápida de Fourier 
 <img width="1024" height="768" alt="Diagrama de Flujo Árbol de decisiones Sencillo Verde (4)" src="https://github.com/user-attachments/assets/0046a1ff-1253-4b2c-90b0-27faa4f538af" /><br>
 ## PROCEDIMIENTO <br>
 En esta parte del código se aplica un filtro digital pasa banda Butterworth de cuarto orden entre 20 y 450 Hz para limpiar la señal EMG y conservar únicamente las frecuencias relacionadas con la actividad muscular.Las frecuencias inferiores a 20 Hz suelen corresponder a movimientos del cuerpo o desplazamientos de la línea base, mientras que las superiores a 450 Hz se asocian a ruido eléctrico. La implementación con butter() y filtfilt() permite realizar un filtrado sin desfase, evitando retrasos en la señal y preservando su forma original. El resultado es una señal más estable y precisa, que refleja de manera fiel la actividad eléctrica del músculo, siendo fundamental para las etapas posteriores de detección y análisis espectral.
+### Código
 ```
 # Filtrado pasa banda (20–450 Hz)
 def butter_bandpass(lowcut, highcut, fs, order=4):
@@ -518,10 +519,10 @@ def butter_bandpass(lowcut, highcut, fs, order=4):
 b, a = butter_bandpass(20, 450, Fs)
 senal_filtrada = filtfilt(b, a, v)
 ```
-## Aplicar transformada rápida de Fourier (FFT) 
+## Transformada rápida de Fourier (FFT) 
 
 Se utilizó la Transformada Rápida de Fourier (FFT) para analizar la señal EMG en el dominio de la frecuencia y observar cómo se distribuye su energía en diferentes bandas. Este método permite identificar las frecuencias dominantes que aparecen durante la contracción muscular y evaluar cambios entre el inicio y el final del experimento. En el código, se convierte la magnitud de la FFT a decibelios (dB) y se representa en escala logarítmica para resaltar mejor las variaciones espectrales. Esto es importante porque un desplazamiento del contenido frecuencial hacia frecuencias más bajas puede indicar fatiga muscular, ya que el músculo genera señales eléctricas más lentas cuando se cansa.
-
+### Código
 ```
 def graficar_fft(segmento, fs, titulo, color):
     N = len(segmento)
@@ -543,9 +544,43 @@ graficar_fft(seg83, Fs, "FFT Contracción 83 (Final)", color='fuchsia')
 plt.tight_layout()
 plt.show()
 ```
+## Espectro de amplitud 
+En esta parte del código se realizó el cálculo del espectro de amplitud de las contracciones seleccionadas (la 4 y la 83) utilizando la Transformada Rápida de Fourier (FFT) y representándolo en una escala logarítmica de frecuencia. Este análisis permite observar cómo se distribuye la energía de la señal EMG en diferentes frecuencias y comparar la actividad muscular al inicio y al final del registro. Al graficar ambas contracciones —una en color azul y la otra en fucsia— se puede visualizar si existe un desplazamiento del contenido espectral hacia frecuencias más bajas, lo cual es un indicador típico de fatiga muscular.
+### Código
+```
+# ESPECTRO DE AMPLITUD (ESCALA LOGARÍTMICA)
 
+plt.figure(figsize=(12,5))
 
+# Contracción 4
+N1 = len(seg_inicial)
+fft_vals1 = np.fft.fft(seg_inicial)
+fft_mag1 = np.abs(fft_vals1) / N1
+fft_mag1 = fft_mag1[:N1//2] * 2
+freqs1 = np.fft.fftfreq(N1, 1/Fs)[:N1//2]
 
+plt.plot(freqs1, fft_mag1, color='blue', linewidth=1.5, label='Contracción 4 (Inicio)')
+
+# Contracción 83
+N2 = len(seg_final)
+fft_vals2 = np.fft.fft(seg_final)
+fft_mag2 = np.abs(fft_vals2) / N2
+fft_mag2 = fft_mag2[:N2//2] * 2
+freqs2 = np.fft.fftfreq(N2, 1/Fs)[:N2//2]
+
+plt.plot(freqs2, fft_mag2, color='fuchsia', linewidth=1.5, label='Contracción 83 (Final)')
+
+# Configuración del gráfico
+plt.xscale('log')
+plt.xlim(10, 500)
+plt.title('Espectro de Amplitud (escala logarítmica)')
+plt.xlabel('Frecuencia [Hz]')
+plt.ylabel('Magnitud')
+plt.grid(True, which='both', ls='--', alpha=0.6)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
 
 
 
