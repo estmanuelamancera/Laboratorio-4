@@ -505,7 +505,7 @@ En esta parte del laboratorio se implementó la Transformada Rápida de Fourier 
 ## Diagrama
 <img width="1024" height="768" alt="Diagrama de Flujo Árbol de decisiones Sencillo Verde (3)" src="https://github.com/user-attachments/assets/dd0d7568-4b88-4ef4-91ec-cc0b41488dc1" /><br>
 ## PROCEDIMIENTO <br>
-Una vez cargada y visualizada la señal electromiográfica (EMG) real, se procedió a dividirla en segmentos o ventanas de análisis con el objetivo de estudiar de manera individual cada contracción muscular. Este procedimiento permite analizar cómo varía el contenido espectral de la señal a lo largo del tiempo, ya que las características eléctricas del músculo cambian con la fatiga y el esfuerzo sostenido. En este caso, se utilizaron ventanas de 0.5 segundos, cada una representando una contracción independiente sobre la cual se aplicó posteriormente la Transformada Rápida de Fourier (FFT).
+
 
 
 
