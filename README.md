@@ -301,52 +301,56 @@ plt.show()
 En esta fase del procesamiento, la señal EMG previamente filtrada se dividió en 83 contracciones musculares individuales. Esta segmentación permite analizar de manera independiente cada evento de contracción, facilitando la evaluación de la forma de onda, la duración y las variaciones de amplitud. Como se muestra en la figura, cada segmento corresponde a una contracción distinta del músculo, evidenciando cómo la actividad eléctrica cambia a lo largo del tiempo. Este procedimiento resulta fundamental para investigaciones relacionadas con la fatiga muscular, la activación motora y el análisis de patrones de esfuerzo.<br>
 
 ```
-# === f. TABLA Y GRÁFICA DE RESULTADOS ===
-results = pd.DataFrame({
-    "Contracción": np.arange(1, len(mean_freqs)+1),
-    "Frecuencia Media (Hz)": np.round(mean_freqs, 2),
-    "Frecuencia Mediana (Hz)": np.round(median_freqs, 2)
-})
-print("\n--- RESULTADOS ---")
-print(results.to_string(index=False))
-
-# Gráfica evolución si hay más de una
-if len(segments) > 1:
-    plt.figure(figsize=(8,4))
-    plt.plot(results["Contracción"], results["Frecuencia Media (Hz)"], 'o-', label="Frecuencia media")
-    plt.plot(results["Contracción"], results["Frecuencia Mediana (Hz)"], 'o-', label="Frecuencia mediana")
-    plt.xlabel("Número de contracción")
-    plt.ylabel("Frecuencia (Hz)")
-    plt.title("Evolución de frecuencia media y mediana")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-# === g. ANÁLISIS AUTOMÁTICO DE FATIGA ===
-if len(mean_freqs) > 1:
-    tendencia = "disminuyen" if mean_freqs[-1] < mean_freqs[0] else "aumentan"
-    print(f"\n Las frecuencias {tendencia} a medida que avanzan las contracciones,")
-    print("lo cual es coherente con la aparición progresiva de fatiga muscular.")
-else:
-    print("\n Solo se detectó una contracción; no se puede evaluar la tendencia,")
-    print("pero sí se calcularon sus frecuencias características (media y mediana).")
+num_contracciones = 83
+L = len(senal_filtrada)
+segmentos = np.array_split(senal_filtrada, num_contracciones)
 ```
-Este bloque final del código presenta y analiza los resultados obtenidos del procesamiento de la señal EMG. Primero crea una tabla con la frecuencia media y mediana calculadas para cada contracción, mostrando los valores redondeados en pantalla. Si la señal contiene varias contracciones, genera una gráfica de evolución donde se observa cómo cambian las frecuencias a lo largo del tiempo. Finalmente, el código interpreta los resultados automáticamente: si las frecuencias disminuyen entre las contracciones, se concluye que existe una tendencia asociada a la fatiga muscular, mientras que si solo se detecta una contracción, se limita a mostrar sus frecuencias características.<br>
 
+<img width="1972" height="1107" alt="image" src="https://github.com/user-attachments/assets/f8bc4dfb-1ddd-4771-befc-4e9676e99155" /><br>
+## CÁLCULO DE MEDIA Y MEDIANA (GRÁFICA)
+En esta etapa se calcularon la frecuencia media y la frecuencia mediana correspondientes a cada una de las 83 contracciones musculares segmentadas. Estos parámetros espectrales permiten analizar cómo se distribuye la energía de la señal EMG en el dominio de la frecuencia. La frecuencia media representa el promedio ponderado de las componentes frecuenciales, mientras que la frecuencia mediana señala el punto que divide el espectro de potencia en dos mitades iguales. En la gráfica se aprecia la evolución de ambas medidas a lo largo de las contracciones, evidenciando variaciones que pueden relacionarse con cambios en la activación muscular o con la aparición de fatiga durante el registro.<br>
+```
+def calcular_frecuencias(segmento, fs):
+    f, Pxx = welch(segmento, fs=fs, nperseg=1024)
+    Pxx = Pxx / np.sum(Pxx)  # Normalizar el espectro de potencia
+    freq_media = np.sum(f * Pxx)
+    cum_Pxx = np.cumsum(Pxx)
+    freq_mediana = f[np.where(cum_Pxx >= 0.5)[0][0]]
+    return freq_media, freq_mediana
 
-<img width="650" height="256" alt="image" src="https://github.com/user-attachments/assets/f36da2c7-5111-4cc2-9d08-a5b5a3682f2f" /><br>
-En la primera gráfica observamos que la señal original tiene una forma casi lineal que aumenta, lo que indica que hay ruido o movimiento del electrodo, no actividad muscular real. mientras que ya aplicado el filtro pasa banda entre 20 y 450 Hz, la señal cambia totalmente: es decir, ahora notamos un pico pequeño al inicio, que corresponde a una contracción breve, y el resto del tiempo la señal queda casi plana, lo que significa que la señal no se capto de la manera deseada.<br>
+frecuencia_media = []
+frecuencia_mediana = []
 
-La amplitud también es muy baja, lo que puede pasar por una contracción débil o un mal contacto de los electrodos. Aun así, el filtrado  fue efectivo bien ya que eliminó el ruido y dejó solo la parte útil de la señal que representa la actividad del músculo.<br>
+for seg in segmentos:
+    f_mean, f_median = calcular_frecuencias(seg, Fs)
+    frecuencia_media.append(f_mean)
+    frecuencia_mediana.append(f_median)
 
-<img width="538" height="210" alt="image" src="https://github.com/user-attachments/assets/f31c6028-4f87-4dfa-be99-08ad25832a32" /><br>
+# %% --- Graficar la evolución de las frecuencias ---
+plt.figure(figsize=(10,5))
+plt.plot(frecuencia_media, 'o-', label='Frecuencia Media')
+plt.plot(frecuencia_mediana, 's-', label='Frecuencia Mediana')
+plt.title('Evolución de la Frecuencia Media y Mediana (83 Contracciones)')
+plt.xlabel('Número de Contracción')
+plt.ylabel('Frecuencia [Hz]')
+plt.legend()
+plt.grid()
+plt.show()
 
-La energía RMS (línea azul) representa la intensidad de la señal EMG a lo largo del tiempo. En la gráfica se ve que solo aparece un pico alto al inicio, marcado con un punto rojo.Lo que indica una única contracción detectada, mientras que el resto de la señal se mantiene muy cerca de cero, señalando que no hubo más actividad muscular después de esa primera contracción.<br>
+tabla_resultados = pd.DataFrame({
+    'Contracción': np.arange(1, num_contracciones + 1),
+    'Frecuencia Media (Hz)': np.round(frecuencia_media, 2),
+    'Frecuencia Mediana (Hz)': np.round(frecuencia_mediana, 2)
+})
 
-<img width="491" height="232" alt="image" src="https://github.com/user-attachments/assets/3066fe51-f99d-4962-bbf3-7a63fc853cb7" /><br>
-<img width="297" height="59" alt="image" src="https://github.com/user-attachments/assets/b6eb0545-92e3-46e9-b75c-c76f44949fe1" /><br>
+print(tabla_resultados)
+tabla_resultados.to_csv('/content/drive/MyDrive/frecuencias_EMG.csv', index=False)
+print("\nArchivo 'frecuencias_EMG.csv' guardado en tu Drive con los resultados.")
+```
+<img width="1622" height="847" alt="image" src="https://github.com/user-attachments/assets/fe0cd771-377d-4cc2-bf8a-c5ceae17c20a" /><br>
 
-A partir de la Transformada de Fourier se obtuvo el espectro de potencia de la contracción registrada; en la gráfica se observa que la mayor energía se concentra en torno a las bajas frecuencias. Para la contracción analizada la frecuencia media fue aproximadamente 35.6 Hz y la frecuencia mediana 20 Hz, lo que indica que la mayor parte de la energía del EMG está por debajo de ~40 Hz en este evento. Fisiológicamente, esto es consistente con una contracción breve y de baja intensidad; en condiciones de fatiga sostenida esperaríamos ver un desplazamiento del espectro hacia frecuencias más bajas (disminución de la frecuencia media y mediana) por la menor velocidad de conducción y menor tasa de disparo de las unidades motoras. En resumen: la FFT confirma que el registro contiene energía principalmente en bajas frecuencias y las métricas calculadas (frec. media y mediana) son coherentes con la amplitud y forma observadas en la señal filtrada.<br>
+<img width="1035" height="428" alt="image" src="https://github.com/user-attachments/assets/c57288b4-a995-4186-90bf-2dae5a0f2e3f" /><br>
+
 
 # PARTE C  Análisis espectral mediante FFT
 En esta parte del laboratorio se implementó la Transformada Rápida de Fourier (FFT) sobre las contracciones obtenidas de la señal EMG real, con el propósito de analizar su comportamiento en el dominio de la frecuencia. Este procedimiento permitió observar cómo varía el contenido espectral a lo largo del esfuerzo muscular y detectar posibles indicios de fatiga a partir de la reducción en las componentes de alta frecuencia. Además, se compararon los espectros de las primeras y últimas contracciones, identificando el desplazamiento del pico espectral asociado con el esfuerzo sostenido. Finalmente, los resultados obtenidos se emplearon para evaluar la utilidad del análisis espectral como herramienta diagnóstica en estudios de electromiografía y desempeño fisiológico muscular.
