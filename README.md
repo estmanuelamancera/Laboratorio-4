@@ -259,7 +259,7 @@ axs[1].grid(True)
 <img width="1945" height="828" alt="image" src="https://github.com/user-attachments/assets/0eb9094d-6f8f-45af-b204-6a1cd401e9e4" /><br>
 
 ## GRÁFICA FILTRADA VS ORIGINAL
-La figura presenta un acercamiento a los primeros tres segundos de la señal EMG, donde se compara la forma de onda original (en gris) con la señal filtrada mediante un filtro pasa banda de 20 a 450 Hz (en azul). Este zoom permite observar con mayor claridad cómo el proceso de filtrado suprime las variaciones lentas y el ruido de baja frecuencia, destacando las oscilaciones rápidas asociadas con la actividad eléctrica real del músculo durante las contracciones. Gracias a este procedimiento, la señal obtenida mantiene las componentes fisiológicamente relevantes, lo que facilita el análisis posterior de la dinámica muscular y la frecuencia de contracción.
+La figura presenta un acercamiento a los primeros tres segundos de la señal EMG, donde se compara la forma de onda original (en gris) con la señal filtrada mediante un filtro pasa banda de 20 a 450 Hz (en rosada). Este zoom permite observar con mayor claridad cómo el proceso de filtrado suprime las variaciones lentas y el ruido de baja frecuencia, destacando las oscilaciones rápidas asociadas con la actividad eléctrica real del músculo durante las contracciones. Gracias a este procedimiento, la señal obtenida mantiene las componentes fisiológicamente relevantes, lo que facilita el análisis posterior de la dinámica muscular y la frecuencia de contracción.
 ### Código 
 ```
 # --- Gráfica comparativa: señal original y filtrada superpuestas ---
