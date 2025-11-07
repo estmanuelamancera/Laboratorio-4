@@ -208,7 +208,7 @@ Esta gráfica presenta el espectro de frecuencias de una sola contracción muscu
 La FFT transforma la señal del dominio del tiempo (amplitud vs. tiempo) al dominio de la frecuencia (potencia vs. frecuencia), permitiendo analizar qué frecuencias predominan en la actividad muscular,el espectro tiene un pico pronunciado en bajas frecuencias, lo que indica que la mayor parte de la energía del músculo se concentra en componentes lentas,la energía disminuye rápidamente a medida que aumenta la frecuencia, lo que es típico en señales EMG, ya que las contracciones musculares contienen más información en bajas frecuencias.
 
 # PARTE B- Procesamiento y análisis de señal EMG real
-Codigo= https://colab.research.google.com/drive/1KPXxuYNoCQRyBh8D7oJwheDpsMR-HgaG#scrollTo=IOVJGvtOuy2u 
+
 ## Procedimiento
 En esta segunda parte del laboratorio se trabajo el procesamiento de una señal electromiográfica (EMG) real, registrada sobre un grupo muscular durante la ejecución de contracciones voluntarias en este caso lo trabajamos especificamente en el antebrazo. Buscando analizar la actividad eléctrica de este y observando el comportamiento del espectro de frecuencias durante el esfuerzo y la posible aparición de fatiga muscular.<br>
 <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/a011ac17-75be-4cf7-b7b8-3fe72f4c350e" /><br>
@@ -222,86 +222,42 @@ Este análisis permite relacionar los cambios en el contenido frecuencial con lo
 
 ## Codigo 
 ```
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt, find_peaks
-from scipy.fft import fft, fftfreq
-from google.colab import files
+# Señal original
+axs[0].plot(t, senal, color='gray', linewidth=0.8)
+axs[0].set_title('Señal EMG Original Completa')
+axs[0].set_xlabel('Tiempo [s]')
+axs[0].set_ylabel('Amplitud [mV]')
+axs[0].grid(True)
+```
+<img width="1662" height="485" alt="image" src="https://github.com/user-attachments/assets/70406ade-afc6-44f3-9523-0842d927aad7" /><br>
 
-# === a–b. CARGAR SEÑAL EMG REAL ===
-print("archivo de señal EMG (CSV)")
-uploaded = files.upload()
+Este bloque del código se presenta una comparación entre la señal electromiográfica (EMG) original y la versión filtrada mediante un filtro pasa banda con un rango de 20 a 450 Hz. Este procedimiento de filtrado permite suprimir el ruido de baja frecuencia —producido por movimientos o variaciones en la línea base— y reducir las componentes de alta frecuencia que no corresponden a la actividad muscular. De esta manera, la señal filtrada (en azul) adquiere una apariencia más clara y fiel a la actividad eléctrica del músculo, lo que facilita su análisis en etapas posteriores, como la identificación de contracciones o el estudio del espectro de frecuencias.<br>
 
-# === CONFIGURACIÓN ===
-archivo = list(uploaded.keys())[0]
-fs = 2000  # Frecuencia de muestreo (Hz) 
-
-# === c. FILTRADO PASA BANDA 20–450 Hz ===
-def bandpass_filter(sig, fs, lowcut=20, highcut=450):
+```
+def butter_bandpass(lowcut, highcut, fs, order=4):
     nyq = 0.5 * fs
-    b, a = butter(4, [lowcut/nyq, highcut/nyq], btype='band')
-    return filtfilt(b, a, sig)
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
+    return b, a
 
-# Lectura
-data = pd.read_csv(archivo, header=None, sep=None, engine='python')
-data = data.apply(pd.to_numeric, errors='coerce').dropna()
-signal = data.iloc[:,0].values.astype(float)
-filtered = bandpass_filter(signal, fs)
+def aplicar_filtro(senal, lowcut=20, highcut=450, fs=1000, order=4):
+    b, a = butter_bandpass(lowcut, highcut, fs, order)
+    return filtfilt(b, a, senal)
+
+senal_filtrada = aplicar_filtro(senal, 20, 450, Fs)
+
+# Original vs Filtrada (superpuestas)
+axs[1].plot(t, senal, color='gray', linewidth=0.8, alpha=0.6, label='Original')
+axs[1].plot(t, senal_filtrada, color='pink', linewidth=1.2, label='Filtrada (20–450 Hz)')
+axs[1].set_title('Comparación: Señal EMG Original vs Filtrada')
+axs[1].set_xlabel('Tiempo [s]')
+axs[1].set_ylabel('Amplitud [mV]')
+axs[1].legend(loc='upper right')
+axs[1].grid(True)
 ```
-Este bloque del código carga y prepara la señal EMG para su análisis. Permite subir el archivo CSV, define la frecuencia de muestreo (2000 Hz) y aplica un filtro pasa banda Butterworth (20–450 Hz) que elimina el ruido y conserva la información útil del músculo, dejando la señal lista para analizar las contracciones y sus frecuencias.<br>
+<img width="1945" height="828" alt="image" src="https://github.com/user-attachments/assets/0eb9094d-6f8f-45af-b204-6a1cd401e9e4" /><br>
 
-```
-# === Visualización señal original y filtrada ===
-t = np.arange(len(signal)) / fs
-plt.figure(figsize=(12,5))
-plt.subplot(2,1,1)
-plt.plot(t, signal)
-plt.title("Señal EMG original")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud")
-
-plt.subplot(2,1,2)
-plt.plot(t, filtered, color='orange')
-plt.title("Señal EMG filtrada (20–450 Hz)")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud")
-plt.tight_layout()
-plt.show()
-
-# === d. DETECCIÓN AUTOMÁTICA DE CONTRACCIONES ===
-# Basada en energía RMS normalizada
-window = int(0.2 * fs)
-rms = np.sqrt(np.convolve(filtered**2, np.ones(window)/window, mode='same'))
-rms_norm = (rms - np.min(rms)) / (np.max(rms) - np.min(rms))
-peaks, _ = find_peaks(rms_norm, height=np.mean(rms_norm)*1.1, distance=int(fs*0.3))
-
-# Construir intervalos en segundos
-intervalos = []
-dur = 0.6  # Duración aproximada (s)
-for p in peaks:
-    start = max((p/fs) - dur/2, 0)
-    end = min((p/fs) + dur/2, len(filtered)/fs)
-    intervalos.append([start, end])
-
-# Si no detecta, toma toda la señal como una contracción
-if len(intervalos) == 0:
-    intervalos = [[0, len(filtered)/fs]]
-
-print(f" Contracciones detectadas: {len(intervalos)}")
-
-# Visualizar energía y detección
-plt.figure(figsize=(12,4))
-plt.plot(t, rms_norm, label='RMS normalizada')
-plt.plot(np.array(peaks)/fs, rms_norm[peaks], 'ro', label='Contracciones detectadas')
-plt.title("Detección automática de contracciones (energía RMS)")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Energía normalizada")
-plt.legend()
-plt.grid(True)
-plt.show()
-
-```
 Este bloque del código visualiza la señal EMG original y filtrada, permitiendo comparar el registro sin procesar con la versión limpia. Luego calcula la energía RMS (Root Mean Square) para estimar los periodos de mayor actividad muscular y, a partir de esa energía normalizada, realiza la detección automática de contracciones utilizando el método de picos. Cada contracción identificada se guarda con su intervalo de inicio y fin en segundos. Finalmente, se muestra una gráfica de energía RMS donde los picos rojos representan las contracciones detectadas en la señal.<br>
 
 ```
