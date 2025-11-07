@@ -307,6 +307,7 @@ segmentos = np.array_split(senal_filtrada, num_contracciones)
 ```
 
 <img width="1972" height="1107" alt="image" src="https://github.com/user-attachments/assets/f8bc4dfb-1ddd-4771-befc-4e9676e99155" /><br>
+
 ## CÁLCULO DE MEDIA Y MEDIANA (GRÁFICA)
 En esta etapa se calcularon la frecuencia media y la frecuencia mediana correspondientes a cada una de las 83 contracciones musculares segmentadas. Estos parámetros espectrales permiten analizar cómo se distribuye la energía de la señal EMG en el dominio de la frecuencia. La frecuencia media representa el promedio ponderado de las componentes frecuenciales, mientras que la frecuencia mediana señala el punto que divide el espectro de potencia en dos mitades iguales. En la gráfica se aprecia la evolución de ambas medidas a lo largo de las contracciones, evidenciando variaciones que pueden relacionarse con cambios en la activación muscular o con la aparición de fatiga durante el registro.<br>
 ```
@@ -350,6 +351,8 @@ print("\nArchivo 'frecuencias_EMG.csv' guardado en tu Drive con los resultados."
 <img width="1622" height="847" alt="image" src="https://github.com/user-attachments/assets/fe0cd771-377d-4cc2-bf8a-c5ceae17c20a" /><br>
 
 <img width="1035" height="428" alt="image" src="https://github.com/user-attachments/assets/c57288b4-a995-4186-90bf-2dae5a0f2e3f" /><br>
+
+La gráfica de evolución de la frecuencia media y mediana a lo largo de las 84 contracciones musculares muestra cómo varía la distribución espectral de la señal EMG durante el registro. En las primeras contracciones, ambas frecuencias se mantienen relativamente estables entre 70 y 100 Hz, mientras que hacia la mitad del registro se notan fluctuaciones y pequeñas caídas que podrían estar relacionadas con el inicio de la fatiga muscular o con cambios en la fuerza de las contracciones. En las últimas contracciones, se observa un incremento marcado en ambas frecuencias, lo que sugiere un mayor esfuerzo o reclutamiento de más fibras musculares. En general, los resultados reflejan cómo la actividad eléctrica del músculo cambia con el tiempo y el nivel de esfuerzo.<br>
 
 
 # PARTE C  Análisis espectral mediante FFT
